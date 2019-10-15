@@ -27,9 +27,9 @@ class GenStack
 template <class T>
 GenStack<T>::GenStack()
 {
-  // initialization of default values
-  myArray = new T[128];
-  size = 128;
+  //fill values
+  myArray = new T[10];
+  size = 10;
   top = -1;
 }
 
@@ -47,53 +47,55 @@ template <class T>
 GenStack<T>::~GenStack()
 {
   delete []myArray;
-  cout << "stack array object deleted" << endl;
 }
 
 template <class T>
 void GenStack<T>::push(T elem)
 {
   // adds more memory for stack if it full
-  if(isFull())
+  if(isFull() == true)
   {
+    //create a new stack
     T* newStack = new T[2 * size];
-    // Puts info from old stack into new one
+    //fill new stack with old stack's value
     for (int i = 0; i < size; ++i)
     {
       newStack[i] = myArray[i];
     }
-    // taking care of variables
+    //update size
     size *= 2;
+    //delete the old stack
     delete myArray;
+    //change name of new stack
     myArray = newStack;
-    //cout << "Allocating more memory to the stack. Size increased from " << size/2 << " to " << size << "." << endl;
   }
-  // finally pushes the new element onto the stack
+  //add the element into the stack
   myArray[++top] = elem;
 }
 
 template <class T>
 T GenStack<T>::pop()
 {
-  // error checking, make sure its not isEmpty
-  if (isEmpty())
+  //check to see if empty
+  if(isEmpty() == true)
   {
-    cout << "Error: Stack is empty and cannot be popped" << endl;
+    cout << "Error: Stack is empty!" << endl;
     exit(1);
   }
   else
   {
-    return myArray[top--]; // returns that value and THEN decreases the top value
+    //return top value and AFTER update the top value
+    return myArray[top--];
   }
 }
 
 template <class T>
 T GenStack<T>::peek()
 {
-  // checks to make sure it is not empty
-  if (isEmpty())
+  //check if empty
+  if(isEmpty() == true)
   {
-    cout << "Error: Stack is empty and cannot be popped" << endl;
+    cout << "Error: Stack is empty!" << endl;
     exit(1);
   }
   else

@@ -3,11 +3,24 @@ I think this works!
 {
   waddup yolo
   (
+    {
 
-  
+      [
+        (
+          [
+            (
+              "hello this wont matter until we hit ( right there"
+
+              the yellow "[ but how ]"
+            )
+
+          ]
+
+        )
+      ]
+    }
+
+
   )
   hah this is just useless }{}
-}
-}
 {}
-}

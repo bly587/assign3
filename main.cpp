@@ -11,6 +11,7 @@
 
 int main(int argc, char *argv[])
 {
+  int numOfErrors = 0;
   //create variable to hold filename
   string filename = "";
   //if they forgot to add a file at the end in the command line
@@ -29,82 +30,121 @@ int main(int argc, char *argv[])
   {
     filename = argv[1];
   }
-
-  GenStack<char> s(2);
-  GenStack<char> paren(10);
-  int lineNumber = 1;
-  string line = "";
-  char c = 'c';
-  ifstream myfile (filename);
-  if (myfile.is_open())
+  //allow for multiple submissions
+  while(numOfErrors == 0)
   {
-    while(getline(myfile,line))
+    int quotationCheck = 0;
+    int charCheck = 0;
+    GenStack<char> s(2);
+    int lineNumber = 1;
+    string line = "";
+    ifstream myfile (filename);
+    if (myfile.is_open())
     {
-      //for brackets
-      for(int i = 0; i < line.size(); ++i)
+      while(getline(myfile,line))
       {
-        if(line[i] == '{')
+        //for brackets
+        for(int i = 0; i < line.size(); ++i)
         {
-          cout << "Added" << endl;
-          s.push(line[i]);
-          if(lineNumber != 1)
+          //check if commented out
+          if(line[i] == '/' && line[i+1] == '/')
           {
-            if(s.isEmpty() == true)
-            {
-              cout << "You are missing a closing bracket '}' before line " << lineNumber << endl;
-            }
+            //set i to max length so you skip this line
+            i = line.size();
           }
-        }
-        else if(line[i] == '}')
-        {
-          // cout << "Attempting to pop" << endl;
-          if(s.peek() != '{')
+          //check if within a string
+          else if(line[i] == '"')
           {
-            //bad sign
-            //extra bracket or why is it there?
-            cout << "Why do you have an extra '}' on line " << lineNumber << ": " << i << endl;
+            if(quotationCheck == 0)
+            {
+              cout << "Quotation found!" << endl;
+              s.push('q');
+              quotationCheck++;
+            }
+            else
+            {
+              if(s.isEmpty() == false)
+              {
+                char check = s.pop();
+                while(check != 'q')
+                {
+                  check = s.pop();
+                }
+                cout << "Quoation ended!" << endl;
+                quotationCheck = 0;
+              }
+              else
+              {
+                cout << "I don't see how you managed this..." << endl;
+              }
+            }
           }
           else
           {
-            s.pop();
-          }
-        }
-        //for parenthesis
-        //
-        //
-        if(line[i] == '(')
-        {
-          cout << "Added paren" << endl;
-          paren.push(line[i]);
-          if(lineNumber != 1)
-          {
-            if(paren.isEmpty() == true)
+            //check if there is an open delimeter
+            if(line[i] == '{' || line[i] == '[' || line[i] == '(')
             {
-              cout << "You are missing a closing bracket ')' before line " << lineNumber << endl;
+              //then push those open delimeters to the stack
+              s.push(line[i]);
+              cout << "Pushed open delimeter" << endl;
+            }
+            //check for closed delimeters
+            else if(line[i] == '}' || line[i] == ']' || line[i] == ')')
+            {
+              //check if stack is empty
+              if(s.isEmpty() == false)
+              {
+                //pop off the most recent thing on the stack and see if the delimeters match and if they open and close correctly
+                //char check = line[i];
+                char tOfStack = s.pop();
+                //check if it is brackets and throw error if it's not right
+                if(tOfStack == '{' && line[i] != '}')
+                {
+                  //cout << tOfStack << " & " << line[i] << endl;
+                  cout << "Error: Expected } and found " << line[i] << " " << lineNumber << ":" << i << endl;
+                  numOfErrors++;
+                }
+                //same for [
+                else if(tOfStack == '[' && line[i] != ']')
+                {
+                  //cout << tOfStack << " & " << line[i] << endl;
+                  cout << "Error: Expected ] and found " << line[i] << " " << lineNumber << ":" << i << endl;
+                  numOfErrors++;
+                }
+                else if(tOfStack == '(' && line[i] != ')')
+                {
+                  //cout << tOfStack << " & " << line[i] << endl;
+                  cout << "Error: Expected ) and found " << line[i] << " " << lineNumber << ":" << i << endl;
+                  numOfErrors++;
+                }
+              }
+              else
+              {
+                //stack is empty so delimeter cannot be closing already
+                cout << "Error: " << line[i] << " " << lineNumber << ":" << i << endl;
+                numOfErrors++;
+              }
             }
           }
         }
-        else if(line[i] == ')')
-        {
-          // cout << "Attempting to pop" << endl;
-          if(paren.peek() != '(')
-          {
-            //bad sign
-            //extra bracket or why is it there?
-            cout << "Why do you have an extra ')' on line " << lineNumber << ": " << i << endl;
-          }
-          else
-          {
-            paren.pop();
-          }
-        }
+        lineNumber++;
       }
-      //for parenthesis
-
-      //for brackets
-      lineNumber++;
-      //cout << line << '\n';
+      myfile.close();
     }
-    myfile.close();
+    if(numOfErrors == 0)
+    {
+      char user = 'n';
+      cout << "Would you like to check another file?(y/n)" << endl;
+      cin >> user;
+      if(user == 'y')
+      {
+        cout << "Enter filename!" << endl;
+        cin >> filename;
+      }
+      else
+      {
+        exit(1);
+      }
+    }
   }
 }
