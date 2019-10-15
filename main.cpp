@@ -2,12 +2,7 @@
 #include <fstream>
 #include "GenStack.h"
 
-/*
-  include in readme
-  http://www.cplusplus.com/doc/tutorial/files/
-// */
-// template <class T>
-// void checkParenthesis(GenStack<T> s, string line, int lineNumber);
+
 
 int main(int argc, char *argv[])
 {
@@ -59,6 +54,7 @@ int main(int argc, char *argv[])
             {
               //cout << "Quotation found!" << endl;
               s.push('q');
+              //cout << s.peek() << endl;
               quotationCheck++;
             }
             else
@@ -96,6 +92,8 @@ int main(int argc, char *argv[])
               {
                 //pop off the most recent thing on the stack and see if the delimeters match and if they open and close correctly
                 //char check = line[i];
+                //cout << "Got to here" << endl;
+                //cout << s.size << endl;
                 char tOfStack = s.pop();
                 //check if it is brackets and throw error if it's not right
                 if(tOfStack == '{' && line[i] != '}')
@@ -131,12 +129,14 @@ int main(int argc, char *argv[])
       }
       myfile.close();
     }
+    //if the file has 0 delimeter errors
     if(numOfErrors == 0)
     {
       cout << "Your file has no delimeter errors!" << endl;
       char user = 'n';
       cout << "Would you like to check another file?(y/n)" << endl;
       cin >> user;
+      //if they want to check another file then change the filename and run again
       if(user == 'y')
       {
         cout << "Enter filename!" << endl;
