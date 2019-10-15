@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
           {
             if(quotationCheck == 0)
             {
-              cout << "Quotation found!" << endl;
+              //cout << "Quotation found!" << endl;
               s.push('q');
               quotationCheck++;
             }
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
                 {
                   check = s.pop();
                 }
-                cout << "Quoation ended!" << endl;
+                //cout << "Quoation ended!" << endl;
                 quotationCheck = 0;
               }
               else
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
             {
               //then push those open delimeters to the stack
               s.push(line[i]);
-              cout << "Pushed open delimeter" << endl;
+              //cout << "Pushed open delimeter" << endl;
             }
             //check for closed delimeters
             else if(line[i] == '}' || line[i] == ']' || line[i] == ')')
@@ -133,6 +133,7 @@ int main(int argc, char *argv[])
     }
     if(numOfErrors == 0)
     {
+      cout << "Your file has no delimeter errors!" << endl;
       char user = 'n';
       cout << "Would you like to check another file?(y/n)" << endl;
       cin >> user;
